@@ -1,20 +1,25 @@
 <?php
+
 namespace src\controllers;
 
 use \core\Controller;
+use \src\helpers\LoginValidate;
 
-class HomeController extends Controller {
+class HomeController extends Controller
+{
+    private $loggedUser;
 
-    public function index() {
-        $this->render('home', ['nome' => 'Bonieky']);
+    public function __construct()
+    {
+        $this->loggedUser = LoginValidate::checkLogin();
+
+        if (!$this->loggedUser) {
+            $this->redirect('/login');
+        }
     }
 
-    public function sobre() {
-        $this->render('sobre');
+    public function index()
+    {
+        $this->render('home', ['user' => $this->loggedUser ?? '']);
     }
-
-    public function sobreP($args) {
-        print_r($args);
-    }
-
 }
